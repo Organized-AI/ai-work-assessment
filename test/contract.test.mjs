@@ -12,7 +12,7 @@ test("assessment, schema, and helper versions stay explicit and synchronized", a
 
   assert.equal(pkg.version, contract.helperVersion);
   assert.equal(Number(pkg.version.split(".")[0]), contract.assessmentPromptVersion);
-  assert.ok(prompt.includes(`# Overflow AI Work Assessment v${contract.assessmentPromptVersion}`));
+  assert.ok(prompt.includes(`# Organized AI Work Assessment v${contract.assessmentPromptVersion}`));
   assert.ok(prompt.includes(`profile schema ${contract.profileSchemaVersion} and prompt version ${contract.assessmentPromptVersion}`));
   assert.ok(prompt.includes(`"prompt_version": ${contract.assessmentPromptVersion}`));
   assert.ok(prompt.includes(`"schema_version": ${contract.profileSchemaVersion}`));

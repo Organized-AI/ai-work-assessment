@@ -43,9 +43,9 @@ the finished report.
 The supporting commands are:
 
 ```sh
-npx github:Runpoint-Partners/ai-work-assessment#v8.0.0 environment-id
-npx github:Runpoint-Partners/ai-work-assessment#v8.0.0 validate-bundle ./ai-work-evidence-xxxxxxxx.json
-npx github:Runpoint-Partners/ai-work-assessment#v8.0.0 consolidate ./bundle-folder
+npx github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 environment-id
+npx github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 validate-bundle ./ai-work-evidence-xxxxxxxx.json
+npx github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 consolidate ./bundle-folder
 ```
 
 ## The privacy model
@@ -108,13 +108,13 @@ npm test           # node --test: validation rules, CLI rendering, coverage floo
 npm run sync:check # verify the vendored modules match upstream
 ```
 
-## Hosted by Overflow
+## Hosted by Organized AI
 
-[Overflow](https://austin.overflowbuilders.com/assessment/) runs a hosted version of this assessment. It uses the same prompt, schema, validator, renderer, and profile template. This repository is the public package for that contract.
+[Organized AI](https://assessment.organizedai.vip/) runs a hosted version of this assessment. It uses the same prompt, schema, validator, renderer, and profile template. This repository is the Organized AI distribution of that contract — originally published by [Runpoint Partners](https://github.com/Runpoint-Partners/ai-work-assessment) under the MIT license (see LICENSE).
 
-What submitting adds is the one thing a local run genuinely cannot do: an **aggregate, unnamed cohort comparison**. A single profile has no cohort, so the local report shows no distribution, percentile, or placement at all — inventing one would be fabrication. Overflow computes placement against its stored submissions, subject to the same N ≥ 8 floor described above.
+What submitting adds is the one thing a local run genuinely cannot do: an **aggregate, unnamed cohort comparison**. A single profile has no cohort, so the local report shows no distribution, percentile, or placement at all — inventing one would be fabrication. Organized AI computes placement against its stored submissions, subject to the same N ≥ 8 floor described above.
 
-Submitting is entirely optional and changes nothing about the assessment itself. If you submit, Overflow keeps only the normalized structured payload, discards the surrounding HTML and any LinkedIn career context, and you choose whether the stored profile stays private or appears in the community directory. Host-specific upload and consent behavior stays outside the local assessment prompt and renderer.
+Submitting is entirely optional and changes nothing about the assessment itself. Submission runs through `python3 tokens.py --submit`, gated on a typed word: `share` lists the profile on the public talent directory at [board.organizedai.vip/talent](https://board.organizedai.vip/talent), `keep` stores it privately. Either way the host keeps only the normalized structured payload, discards the surrounding HTML and any LinkedIn career context. Host-specific upload and consent behavior stays outside the local assessment prompt and renderer.
 
 The open tool is fully useful on its own. That is the point.
 

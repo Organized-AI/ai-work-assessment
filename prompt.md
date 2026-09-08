@@ -1,4 +1,4 @@
-# Overflow AI Work Assessment v8
+# Organized AI Work Assessment v8
 
 Build one concise, evidence-based work profile for the person who runs this prompt. Use only the source families selected for this run:
 
@@ -11,7 +11,7 @@ A configured copy can begin with a `Source choices for this run` block. Treat th
 Your job is evidence extraction and synthesis. Produce structured JSON only.
 Deterministic local code calculates counts, coverage windows, the matched-window
 Claude/Codex mix, and duplicate checks. Deterministic server code calculates
-cohort statistics after submission. The fixed Overflow renderer creates the
+cohort statistics after submission. The fixed renderer creates the
 review page. Do not write HTML, CSS, JavaScript, SVG, charts, upload forms, or
 cohort curves.
 
@@ -307,7 +307,7 @@ Additional visible rules:
   placeholder.
 - The local collector produces `shared_window_sessions` from readable local
   records. Validators confirm that the payload and visible arithmetic agree.
-  Overflow cannot authenticate the session counts against raw history because
+  The operator cannot authenticate the session counts against raw history because
   raw sessions are not uploaded. The fixed renderer states this limit beside
   the mix. Do not repeat it in a model-authored limitation.
 - Cohort metrics, percentiles, distribution curves, and comparison sample size do not belong in this JSON. The server adds them after submission.
@@ -749,7 +749,7 @@ Check every item:
       window ledger. Its total, shares, and daily rates reconcile to those rows.
 - [ ] If there is no overlap, `shared_window_sessions` is `[]` and
       `normalized_mix` is `null`. No ratio or partial mix is present.
-- [ ] When a mix is present, its limitation says that Overflow validates
+- [ ] When a mix is present, its limitation says that the operator validates
       payload consistency but does not authenticate counts against raw history.
 - [ ] Mix is labeled session-record share only and does not imply time, preference, quality, or completed work.
 - [ ] Cohort placement and curves are absent from the local JSON.
@@ -760,28 +760,34 @@ Fix all failures before handoff.
 
 ## 10. Validate and render locally
 
-Save the JSON as `profile.json`. Download the fixed renderer and template into one temporary directory:
+Save the JSON as `profile.json`. Validate and render it with the fixed, open-source CLI, branded with the operator's published config:
 
 ```sh
-mkdir -p ./overflow-profile-render
-curl -fsS https://austin.overflowbuilders.com/apply/profile-renderer.mjs -o ./overflow-profile-render/profile-renderer.mjs
-curl -fsS https://austin.overflowbuilders.com/apply/profile-template.mjs -o ./overflow-profile-render/profile-template.mjs
-cp ./profile.json ./overflow-profile-render/profile.json
-cd ./overflow-profile-render
-node profile-renderer.mjs validate profile.json
-node profile-renderer.mjs render profile.json --out project-fit-{slug}.html
+curl -fsS https://assessment.organizedai.vip/apply/config.json -o ./organized-ai-config.json
+npx --yes github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 validate profile.json
+npx --yes github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 render profile.json --config ./organized-ai-config.json --out project-fit-{slug}.html
 ```
 
 Validation and rendering are local and deterministic. The renderer checks schema shape, evidence references, visible section budgets, exact four-step workflow, duplicate visible claims, and normalized mix arithmetic. It does not upload the profile.
 
 Open the rendered HTML and inspect desktop and mobile layouts. If validation or rendering fails, fix `profile.json` and run both commands again. Do not edit the generated HTML to repair content or layout.
 
-The fixed page contains Overflow's reviewed submission control. It makes no
-request until the user completes the form, chooses visibility, consents, and
-clicks the final upload button. Do not prefill the form or trigger submission.
-Only the structured payload is sent. Schema 9 contains generalized,
-source-labeled LinkedIn synthesis and no raw LinkedIn profile data. The server
-calculates compatible cohort comparisons from stored assessment data.
+Sharing is a separate, explicit step the owner runs themselves — never the
+assessment agent. From the machine that ran the assessment, the owner submits
+the rendered report with the Organized Tokens script:
+
+```sh
+python3 tokens.py --submit project-fit-{slug}.html
+```
+
+The script prints exactly what it will send and waits for a typed word:
+`share` publishes the profile to the operator's talent directory, `keep` stores
+it privately, and anything else cancels. Do not run this command, prefill it,
+or trigger submission. Only the structured payload from the report's embedded
+profile data is sent. Schema 9 contains generalized, source-labeled LinkedIn
+synthesis and no raw LinkedIn profile data. The server calculates compatible
+cohort comparisons from stored assessment data once at least eight profiles
+are shared.
 
 ## 11. Handoff
 

@@ -23,6 +23,7 @@ Compatible reports remain readable under their original rules. Run Assessment v8
 
 | Helper release | Released | Change |
 | --- | --- | --- |
+| v8.0.0-organized.1 | September 8, 2026 | Organized AI distribution: the prompt and hosting references point at Organized AI endpoints. Assessment v8, prompt version 8, schema v9, and the helper code are unchanged. |
 | v8.0.0 | August 2, 2026 | Added schema-v9 validation and fixed rendering, vendored the current prompt and sample, and added a cross-repository release check. |
 | v7.0.2 | July 30, 2026 | Clarified the version contract and corrected the Assessment v7 instructions. |
 | v7.0.1 | July 26, 2026 | Fixed command-line execution through package shims. |
