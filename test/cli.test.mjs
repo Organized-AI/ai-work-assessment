@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -118,7 +118,7 @@ test("current schema renders the concise standalone matching profile", () => {
 
 test("current schema validation reports matching fields", () => {
   const stdout = run(["validate", CURRENT_FIXTURE]);
-  assert.match(stdout, /helper release\s+v8\.0\.0/);
+  assert.match(stdout, /helper release\s+v8\.0\.1/);
   assert.match(stdout, /assessment prompt\s+v8/);
   assert.match(stdout, /profile schema\s+v9/);
   assert.match(stdout, /visible industries\s+4/);
@@ -130,7 +130,7 @@ test("current schema validation reports matching fields", () => {
 test("validate prints a field-level report", () => {
   const stdout = run(["validate", FIXTURE]);
   assert.match(stdout, /name\s+Riley Okafor/);
-  assert.match(stdout, /helper release\s+v8\.0\.0/);
+  assert.match(stdout, /helper release\s+v8\.0\.1/);
   assert.match(stdout, /assessment prompt\s+v6/);
   assert.match(stdout, /profile schema\s+v8/);
   assert.match(stdout, /badge map complete\s+yes \(14\/14\)/);
@@ -148,6 +148,26 @@ test("rejects a report containing a live credential", () => {
   const { status, stderr } = runExpectingFailure(["render", poisoned]);
   assert.equal(status, 2);
   assert.match(stderr, /API key/);
+});
+
+test("rejects JSON-escaped credentials in JSON and embedded HTML before writing", () => {
+  const workdir = mkdtempSync(join(tmpdir(), "awa-escaped-"));
+  const profile = JSON.parse(readFileSync(CURRENT_FIXTURE, "utf8"));
+  profile.name = "sk-proj-" + "x".repeat(30);
+  const escaped = JSON.stringify(profile).replace("sk-proj-", "\\u0073k-proj-");
+  for (const extension of ["json", "html"]) {
+    const input = join(workdir, `input.${extension}`);
+    const output = join(workdir, `output-${extension}.html`);
+    const store = join(workdir, `store-${extension}.json`);
+    writeFileSync(input, extension === "json" ? escaped : `<script type="application/json" id="profile-data">${escaped}</script>`);
+    for (const command of ["render", "validate"]) {
+      const { status, stderr } = runExpectingFailure([command, input, "--out", output, "--store", store]);
+      assert.equal(status, 2);
+      assert.match(stderr, /API key/);
+      assert.equal(existsSync(output), false);
+      assert.equal(existsSync(store), false);
+    }
+  }
 });
 
 test("--store is opt-in and keyed by slug", () => {

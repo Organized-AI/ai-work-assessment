@@ -43,18 +43,18 @@ the finished report.
 The supporting commands are:
 
 ```sh
-npx github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 environment-id
-npx github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 validate-bundle ./ai-work-evidence-xxxxxxxx.json
-npx github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 consolidate ./bundle-folder
+npx github:Organized-AI/ai-work-assessment#v8.0.1-organized.1 environment-id
+npx github:Organized-AI/ai-work-assessment#v8.0.1-organized.1 validate-bundle ./ai-work-evidence-xxxxxxxx.json
+npx github:Organized-AI/ai-work-assessment#v8.0.1-organized.1 consolidate ./bundle-folder
 ```
 
 ## The privacy model
 
 This matters more than the output, so it is worth stating precisely.
 
-- **It runs on your machine.** Session extraction, analysis, and rendering are all local. The agent writes temporary digest files and deletes them when it finishes.
+- **Files stay under your control.** Session files are read and the report is written in your environment. Your coding agent may process evidence through its model provider under your configured data settings. The agent writes temporary digest files and deletes them when it finishes.
 - **Read-only requests, only to sources you include.** GitHub is read through your existing authenticated `gh` session; the assessment makes no mutations, clones no repositories, and never reads or persists your token. LinkedIn is opened only if you explicitly opt in, only in your own authenticated browser, and only your own profile.
-- **Your prompts and transcripts never leave the machine.** They are read to produce counts, patterns, and paraphrases. Raw prompt text is never quoted verbatim into the profile, and the metadata-only agent-operations ledger is forbidden from containing command text, arguments, file contents, URLs, or credentials.
+- **The helper does not upload prompts or transcripts.** Your coding agent’s model-provider settings still apply during analysis. Evidence is used to produce counts, patterns, and paraphrases. Raw prompt text is never quoted verbatim into the profile, and the metadata-only agent-operations ledger is forbidden from containing command text, arguments, file contents, URLs, or credentials.
 - **You review before anything is shared.** The report carries a "Private preview — nothing has been uploaded" notice until you personally decide otherwise.
 - **Identifying details are abstracted during extraction, not at the end.** Client names, colleague names, employers, private repository and organization names, contact details, and private project names are removed or generalized as the evidence is collected. Health, financial, legal, family, and similar private sessions are dropped from examples entirely.
 - **Secret patterns are rejected outright.** Before a profile is accepted, it is scanned for API keys, AWS access keys, GitHub tokens, Slack tokens, private keys, and JWTs. A match rejects the whole file rather than scrubbing it.
@@ -73,7 +73,7 @@ The evidence view keeps the work arcs, source labels, limits, and structured mat
 
 ## Versioning
 
-This is **Assessment v8**, implemented by prompt version 8 and profile schema version 9. The open-source helper release is **v8.0.0**. The helper uses semantic versioning. The profile schema remains a separate data-contract version.
+This is **Assessment v8**, implemented by prompt version 8 and profile schema version 9. The open-source helper release is **v8.0.1**. The helper uses semantic versioning. The profile schema remains a separate data-contract version.
 
 Every generated profile records `prompt_version` and `schema_version`, so a report can be traced to the contract that produced it. Complete prompt-v6/schema-v8 and prompt-v7/schema-v8 profiles remain compatible. Assessment v8 uses the new matching-focused schema v9.
 
@@ -101,20 +101,20 @@ Or pass a JSON file to the CLI with `--config`. Defaults are deliberately generi
 
 If you collect enough profiles to compare them, `src/curves.js` builds aggregate distribution shapes. It enforces a **minimum-coverage floor of N ≥ 8**: a metric is published as a density shape only once at least eight schema-compatible profiles report it, and below that floor it is listed as pending with no shape, no count, and no extrema. The output contains normalized density curves on fixed public domains — never profile rows, raw observations, bucket counts, exact extrema, quantiles, ranks, names, emails, URLs, or identifiers. Do not lower the floor; it is what keeps a small cohort from being re-identifiable.
 
-The prompt, schema guide, validator, renderer, profile template, evidence helper, curves, and current sample fixture are vendored from the Overflow site. Fix those files upstream and run `npm run sync`. `npm run sync:check` exits non-zero on drift. `SYNC-MANIFEST.json` records the source revision, transforms, and hashes. [`RELEASING.md`](RELEASING.md) records the complete version sequence.
+The shared contract and rendering modules originate in the Overflow distribution. `SYNC-MANIFEST.json` preserves the pinned vendor hashes. Organized AI corrections are declared in `DISTRIBUTION-PATCHES.json` and applied by `scripts/distribution-patches.mjs`; do not hand-edit generated files. `npm run sync:check` verifies every vendored file against its original hash, reversing the declared patches first where needed. It does not require the private upstream website checkout. [`RELEASING.md`](RELEASING.md) describes distribution releases and upstream refreshes.
 
 ```sh
 npm test           # node --test: validation rules, CLI rendering, coverage floor
-npm run sync:check # verify the vendored modules match upstream
+npm run sync:check # verify pinned vendor hashes plus declared patches
 ```
 
 ## Hosted by Organized AI
 
-[Organized AI](https://assessment.organizedai.vip/) runs a hosted version of this assessment. It uses the same prompt, schema, validator, renderer, and profile template. This repository is the Organized AI distribution of that contract — originally published by [Runpoint Partners](https://github.com/Runpoint-Partners/ai-work-assessment) under the MIT license (see LICENSE).
+[Organized AI](https://assessment.organizedai.vip/) runs a hosted version of this assessment. It uses this distribution’s prompt, schema, validator, renderer, and profile template. This repository is the Organized AI distribution of that contract — originally published by [Runpoint Partners](https://github.com/Runpoint-Partners/ai-work-assessment) under the MIT license (see LICENSE).
 
-What submitting adds is the one thing a local run genuinely cannot do: an **aggregate, unnamed cohort comparison**. A single profile has no cohort, so the local report shows no distribution, percentile, or placement at all — inventing one would be fabrication. Organized AI computes placement against its stored submissions, subject to the same N ≥ 8 floor described above.
+Organized AI currently provides optional private storage and a public talent directory. It does **not** currently show cohort comparisons. The reusable cohort utilities described above are library capabilities, not a promise of hosted functionality. No local report invents a distribution, percentile, placement, or score.
 
-Submitting is entirely optional and changes nothing about the assessment itself. Submission runs through `python3 tokens.py --submit`, gated on a typed word: `share` lists the profile on the public talent directory at [board.organizedai.vip/talent](https://board.organizedai.vip/talent), `keep` stores it privately. Either way the host keeps only the normalized structured payload, discards the surrounding HTML and any LinkedIn career context. Host-specific upload and consent behavior stays outside the local assessment prompt and renderer.
+Submitting is entirely optional and changes nothing about the assessment itself. Submission runs through `python3 tokens.py --submit`, gated on a typed word: `share` lists the profile on the public talent directory at [board.organizedai.vip/talent](https://board.organizedai.vip/talent), `keep` stores it privately. Either way the host keeps only the normalized structured payload, discards the surrounding HTML and retains only generalized LinkedIn-derived context when the owner opted in. Host-specific upload and consent behavior stays outside the local assessment prompt and renderer.
 
 The open tool is fully useful on its own. That is the point.
 

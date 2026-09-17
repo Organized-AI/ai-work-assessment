@@ -12,8 +12,8 @@ and display. The assessment model returns JSON. It does not author the report.
 3. `profile-renderer.mjs validate` checks the contract, evidence references,
    word budgets, duplicate claims, and deterministic arithmetic.
 4. `profile-renderer.mjs render` applies the fixed Overflow template.
-5. The server adds compatible cohort distributions after a reviewed profile is
-   submitted.
+5. Optional submission is host-specific. Organized AI currently provides private
+   storage and a public talent directory, not hosted cohort comparisons.
 
 ## Three data layers
 
@@ -108,10 +108,11 @@ must resolve to the same value in the schema-9 payload. Allowed roots are
 round, format, estimate, or free-type the number.
 
 The normalized Claude/Codex mix uses the exact overlapping calendar window.
-Only interactive top-level session records in that window count. Scheduled
-runs, subagents, prompt-log entries, model-switch duplicates, and records
-outside the shared window do not count. The visible label must say that it is
-session-record share. It cannot imply time spent, preference, quality, or
+Both sources must use the same explicitly labeled execution-mode population.
+Include all retained coding execution modes by default, while keeping interactive,
+background, scheduled and delegated counts separate in the activity ledger.
+Prompt-log entries, mirrored records, model-switch duplicates and records outside
+the shared window do not count. The visible label must say session-record share. It cannot imply time spent, preference, quality, or
 completed work.
 
 `activity_analysis.coverage.shared_window_sessions` is the deterministic ledger
@@ -135,7 +136,8 @@ Validators enforce internal consistency between the ledger, normalized mix,
 and visible arithmetic. Overflow does not authenticate counts against raw local
 history because raw sessions and transcripts are not uploaded.
 
-If the retained Claude and Codex windows do not overlap, use this exact shape:
+If either comparison source is omitted or unavailable, or the retained Claude
+and Codex windows do not overlap, use this exact shape:
 
 ```json
 {
@@ -150,7 +152,7 @@ If the retained Claude and Codex windows do not overlap, use this exact shape:
 
 Do not send `{}`, one ledger row, zero-filled rows, placeholder dates, or an
 estimated ratio. The fixed renderer uses the null mix and empty ledger to show
-the upload and coverage placeholder.
+the unavailable-comparison placeholder; no history upload is needed.
 
 ## Synthesis ownership
 
@@ -223,8 +225,9 @@ industry synthesis used for matching.
 - Set `schema_version` to `9` and `prompt_version` to `8`.
 - Populate `activity_analysis.coverage.shared_window_sessions` before synthesis.
   The visible normalized mix mirrors it and cannot supply independent counts.
-- When no overlap exists, use an empty shared-window ledger and a null normalized
-  mix. The renderer owns the coverage placeholder.
+- When either comparison source is omitted or unavailable, or no overlap exists,
+  use an empty shared-window ledger and a null normalized mix. Do not fabricate
+  missing source windows or zero counts. The renderer owns the coverage placeholder.
 - Keep `focus` and `headline` equal to the hero thesis for older readers.
 - Keep the bundle schema at version 1. The v8.0.0 environment ID,
   validation, and consolidation commands remain compatible.

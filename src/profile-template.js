@@ -200,7 +200,7 @@ function normalizedMix(mix, items, evidence) {
 }
 
 function emptyMix() {
-  return `<div class="empty-state"><span class="source">Matched-window comparison</span><h3>Normalized Claude / Codex mix</h3><p>A fair split needs session counts from the same calendar window. Upload compatible source history to calculate it. No ratio is estimated.</p></div>`;
+  return `<div class="empty-state"><span class="source">Matched-window comparison</span><h3>Normalized Claude / Codex mix</h3><p>A fair split needs retained Claude and Codex counts from the same calendar window. A source may be omitted, unavailable, or outside that window. No ratio is estimated; no history needs to be uploaded.</p></div>`;
 }
 
 function agentPractice(practiceValue, profile, evidence) {

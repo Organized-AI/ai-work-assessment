@@ -10,7 +10,7 @@ A configured copy can begin with a `Source choices for this run` block. Treat th
 
 Your job is evidence extraction and synthesis. Produce structured JSON only.
 Deterministic local code calculates counts, coverage windows, the matched-window
-Claude/Codex mix, and duplicate checks. Deterministic server code calculates
+Claude/Codex mix, and duplicate checks. Organized AI does not currently provide cohort comparisons. Do not promise
 cohort statistics after submission. The fixed renderer creates the
 review page. Do not write HTML, CSS, JavaScript, SVG, charts, upload forms, or
 cohort curves.
@@ -24,7 +24,7 @@ Before you inspect anything, tell the user in 4 to 7 plain sentences:
 - which selected local agent histories you will analyze;
 - that GitHub access is read-only through their existing authenticated account;
 - that LinkedIn is optional and is used only as separately labeled career context;
-- that extraction and profile generation happen locally;
+- that files are read and written in their environment, while their coding agent’s model-provider data settings still apply;
 - that identifying private-project information is abstracted during extraction;
 - that local retention and account visibility limit what the evidence can establish;
 - that nothing is uploaded automatically.
@@ -57,7 +57,7 @@ Do not infer a release from the existence of a session. Use `implemented`, `work
 5. Industry assessment must be holistic. Combine LinkedIn career context with observed agent work when both exist. Do not turn the result into a resume timeline.
 6. Describe agent use through role, decomposition, parallelism, verification, recovery, and reusable controls. `Code editing`, `filesystem`, `GitHub`, and similar universal tools are not visible differentiators.
 7. Do not create visible badge cards, star ratings, a generic tool ledger, an employer chronology, or a list of every technology touched.
-8. Do not assign an overall score, rank, percentile, or cohort placement. Cohort curves and comparisons are server-owned after submission.
+8. Do not assign an overall score, rank, percentile, or cohort placement. Do not promise cohort curves or comparisons; this host does not currently provide them.
 9. Preserve negative evidence and uncertainty. An omitted source is a user choice, not evidence of missing ability.
 10. Abstract client, employer, project, product, colleague, repository, and
 organization names during extraction. Schema 9 keeps only generalized LinkedIn
@@ -294,12 +294,14 @@ Additional visible rules:
 - `activity_analysis.coverage.shared_window_sessions` is the deterministic
   source of truth for the matched Claude/Codex window. It contains exactly one
   Claude row and one Codex row. Both rows use the same inclusive `from` and `to`
-  dates and contain the filtered interactive session count for that window.
+  dates and contain counts from the same explicitly labeled execution-mode population.
+  Include all retained coding execution modes by default; keep their class counts
+  separate elsewhere. These record shares never measure completed work.
 - `normalized_mix` must mirror `shared_window_sessions` exactly. Its dates and
   source counts cannot differ. Calculate `calendar_days`, `total_sessions`,
   `share`, and `sessions_per_calendar_day` from those two rows. It measures
   session-record share only. Never estimate or rewrite a count.
-- If the retained Claude and Codex windows do not overlap, set
+- If Claude or Codex is omitted or unavailable, or their retained windows do not overlap, set
   `activity_analysis.coverage.shared_window_sessions` to `[]` and set
   `profile_view.agent_footprint.normalized_mix` to `null`. This is the only
   valid unavailable shape. Do not emit `{}`, partial rows, placeholder counts,
@@ -310,7 +312,7 @@ Additional visible rules:
   The operator cannot authenticate the session counts against raw history because
   raw sessions are not uploaded. The fixed renderer states this limit beside
   the mix. Do not repeat it in a model-authored limitation.
-- Cohort metrics, percentiles, distribution curves, and comparison sample size do not belong in this JSON. The server adds them after submission.
+- Cohort metrics, percentiles, distribution curves, and comparison sample size do not belong in this JSON. This host does not currently add them after submission.
 
 ## 8. Produce profile schema 9 JSON
 
@@ -653,8 +655,9 @@ Use this schema-v9 extension exactly:
 }
 ```
 
-When Claude and Codex have no overlapping retained dates, replace the two mix
-fields with this exact unavailable shape. Keep the rest of the profile:
+When either Claude or Codex is omitted or unavailable, or they have no overlapping
+retained dates, use this exact unavailable shape. Keep only observed source windows;
+do not fabricate a window or a zero-session source. Keep the rest of the profile:
 
 ```json
 {
@@ -747,7 +750,7 @@ Check every item:
       Claude row and one Codex row with identical inclusive dates.
 - [ ] Normalized mix dates and source session counts exactly match the shared
       window ledger. Its total, shares, and daily rates reconcile to those rows.
-- [ ] If there is no overlap, `shared_window_sessions` is `[]` and
+- [ ] If either comparison source is omitted or unavailable, or there is no overlap, `shared_window_sessions` is `[]` and
       `normalized_mix` is `null`. No ratio or partial mix is present.
 - [ ] When a mix is present, its limitation says that the operator validates
       payload consistency but does not authenticate counts against raw history.
@@ -764,8 +767,8 @@ Save the JSON as `profile.json`. Validate and render it with the fixed, open-sou
 
 ```sh
 curl -fsS https://assessment.organizedai.vip/apply/config.json -o ./organized-ai-config.json
-npx --yes github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 validate profile.json
-npx --yes github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 render profile.json --config ./organized-ai-config.json --out project-fit-{slug}.html
+npx --yes github:Organized-AI/ai-work-assessment#v8.0.1-organized.1 validate profile.json
+npx --yes github:Organized-AI/ai-work-assessment#v8.0.1-organized.1 render profile.json --config ./organized-ai-config.json --out project-fit-{slug}.html
 ```
 
 Validation and rendering are local and deterministic. The renderer checks schema shape, evidence references, visible section budgets, exact four-step workflow, duplicate visible claims, and normalized mix arithmetic. It does not upload the profile.
@@ -785,9 +788,8 @@ The script prints exactly what it will send and waits for a typed word:
 it privately, and anything else cancels. Do not run this command, prefill it,
 or trigger submission. Only the structured payload from the report's embedded
 profile data is sent. Schema 9 contains generalized, source-labeled LinkedIn
-synthesis and no raw LinkedIn profile data. The server calculates compatible
-cohort comparisons from stored assessment data once at least eight profiles
-are shared.
+synthesis and no raw LinkedIn profile data. This host does not currently show cohort comparisons. Submission does not
+independently verify the underlying work claims.
 
 ## 11. Handoff
 

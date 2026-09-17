@@ -4,7 +4,7 @@ The assessment, profile schema, and open-source helper have separate version num
 
 - **Assessment v8** is the current assessment method and prompt.
 - **Profile schema v9** is the matching-focused JSON format written by Assessment v8.
-- **Helper v8.0.0** is the current release of the open-source command-line tools and fixed renderer.
+- **Helper v8.0.1** is the current release of the open-source command-line tools and fixed renderer.
 
 The generated profile records both `prompt_version` and `schema_version`. Those fields show which assessment contract produced the report.
 
@@ -23,6 +23,7 @@ Compatible reports remain readable under their original rules. Run Assessment v8
 
 | Helper release | Released | Change |
 | --- | --- | --- |
+| v8.0.1 | September 17, 2026 | Organized AI compatibility fixes: omitted source families can produce a report without an invented tool comparison; decoded credential rejection; truthful privacy and hosted-feature copy; reproducible distribution patches and independent release checks. |
 | v8.0.0-organized.1 | September 8, 2026 | Organized AI distribution: the prompt and hosting references point at Organized AI endpoints. Assessment v8, prompt version 8, schema v9, and the helper code are unchanged. |
 | v8.0.0 | August 2, 2026 | Added schema-v9 validation and fixed rendering, vendored the current prompt and sample, and added a cross-repository release check. |
 | v7.0.2 | July 30, 2026 | Clarified the version contract and corrected the Assessment v7 instructions. |
