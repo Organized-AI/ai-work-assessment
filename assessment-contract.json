@@ -3,5 +3,5 @@
   "assessmentPromptVersion": 8,
   "profileSchemaVersion": 9,
   "minimumCompatiblePromptVersion": 6,
-  "helperVersion": "8.0.0"
+  "helperVersion": "8.0.1"
 }

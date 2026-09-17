@@ -1,0 +1,88 @@
+{
+  "description": "Explicit compatibility and truthful-hosting corrections over the unchanged pinned vendor hashes in SYNC-MANIFEST.json. Generated files are never edited outside these declared patches.",
+  "base_distribution_commit": "da53082984e3d792ccf66cf717e8ea8bc1c2d213",
+  "files": {
+    "src/validate.js": [
+      {
+        "find": "    if (observedBySource.some((items) => !items.length)) {\n      throw new ProfileError(\"An unavailable normalized mix requires recorded Claude and Codex windows.\", 422, \"PROFILE_V9_MIX_WINDOW_INVALID\");\n    }",
+        "replace": "    if (observedBySource.some((items) => !items.length)) {\n      // A source can be omitted or unavailable. Do not invent an empty window\n      // or a zero count just to manufacture a two-tool comparison.\n      return;\n    }"
+      }
+    ],
+    "src/profile-template.js": [
+      {
+        "find": "A fair split needs session counts from the same calendar window. Upload compatible source history to calculate it. No ratio is estimated.",
+        "replace": "A fair split needs retained Claude and Codex counts from the same calendar window. A source may be omitted, unavailable, or outside that window. No ratio is estimated; no history needs to be uploaded."
+      }
+    ],
+    "assessment-contract.json": [
+      {
+        "find": "\"helperVersion\": \"8.0.0\"",
+        "replace": "\"helperVersion\": \"8.0.1\""
+      }
+    ],
+    "prompt.md": [
+      {
+        "find": "Deterministic server code calculates\ncohort statistics after submission.",
+        "replace": "Organized AI does not currently provide cohort comparisons. Do not promise\ncohort statistics after submission."
+      },
+      {
+        "find": "- that extraction and profile generation happen locally;",
+        "replace": "- that files are read and written in their environment, while their coding agent\u2019s model-provider data settings still apply;"
+      },
+      {
+        "find": "Cohort curves and comparisons are server-owned after submission.",
+        "replace": "Do not promise cohort curves or comparisons; this host does not currently provide them."
+      },
+      {
+        "find": "Both rows use the same inclusive `from` and `to`\n  dates and contain the filtered interactive session count for that window.",
+        "replace": "Both rows use the same inclusive `from` and `to`\n  dates and contain counts from the same explicitly labeled execution-mode population.\n  Include all retained coding execution modes by default; keep their class counts\n  separate elsewhere. These record shares never measure completed work."
+      },
+      {
+        "find": "- If the retained Claude and Codex windows do not overlap, set",
+        "replace": "- If Claude or Codex is omitted or unavailable, or their retained windows do not overlap, set"
+      },
+      {
+        "find": "- Cohort metrics, percentiles, distribution curves, and comparison sample size do not belong in this JSON. The server adds them after submission.",
+        "replace": "- Cohort metrics, percentiles, distribution curves, and comparison sample size do not belong in this JSON. This host does not currently add them after submission."
+      },
+      {
+        "find": "When Claude and Codex have no overlapping retained dates, replace the two mix\nfields with this exact unavailable shape. Keep the rest of the profile:",
+        "replace": "When either Claude or Codex is omitted or unavailable, or they have no overlapping\nretained dates, use this exact unavailable shape. Keep only observed source windows;\ndo not fabricate a window or a zero-session source. Keep the rest of the profile:"
+      },
+      {
+        "find": "- [ ] If there is no overlap, `shared_window_sessions` is `[]` and",
+        "replace": "- [ ] If either comparison source is omitted or unavailable, or there is no overlap, `shared_window_sessions` is `[]` and"
+      },
+      {
+        "find": "The server calculates compatible\ncohort comparisons from stored assessment data once at least eight profiles\nare shared.",
+        "replace": "This host does not currently show cohort comparisons. Submission does not\nindependently verify the underlying work claims."
+      },
+      {
+        "find": "npx --yes github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 validate profile.json\nnpx --yes github:Organized-AI/ai-work-assessment#v8.0.0-organized.1 render profile.json",
+        "replace": "npx --yes github:Organized-AI/ai-work-assessment#v8.0.1-organized.1 validate profile.json\nnpx --yes github:Organized-AI/ai-work-assessment#v8.0.1-organized.1 render profile.json"
+      }
+    ],
+    "docs/profile-v9-contract.md": [
+      {
+        "find": "5. The server adds compatible cohort distributions after a reviewed profile is\n   submitted.",
+        "replace": "5. Optional submission is host-specific. Organized AI currently provides private\n   storage and a public talent directory, not hosted cohort comparisons."
+      },
+      {
+        "find": "Only interactive top-level session records in that window count. Scheduled\nruns, subagents, prompt-log entries, model-switch duplicates, and records\noutside the shared window do not count. The visible label must say that it is\nsession-record share.",
+        "replace": "Both sources must use the same explicitly labeled execution-mode population.\nInclude all retained coding execution modes by default, while keeping interactive,\nbackground, scheduled and delegated counts separate in the activity ledger.\nPrompt-log entries, mirrored records, model-switch duplicates and records outside\nthe shared window do not count. The visible label must say session-record share."
+      },
+      {
+        "find": "If the retained Claude and Codex windows do not overlap, use this exact shape:",
+        "replace": "If either comparison source is omitted or unavailable, or the retained Claude\nand Codex windows do not overlap, use this exact shape:"
+      },
+      {
+        "find": "- When no overlap exists, use an empty shared-window ledger and a null normalized\n  mix. The renderer owns the coverage placeholder.",
+        "replace": "- When either comparison source is omitted or unavailable, or no overlap exists,\n  use an empty shared-window ledger and a null normalized mix. Do not fabricate\n  missing source windows or zero counts. The renderer owns the coverage placeholder."
+      },
+      {
+        "find": "the upload and coverage placeholder.",
+        "replace": "the unavailable-comparison placeholder; no history upload is needed."
+      }
+    ]
+  }
+}

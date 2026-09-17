@@ -88,6 +88,8 @@ function loadProfile(inputPath) {
 }
 
 function normalize(profile) {
+  // Scan decoded values too: JSON escapes must not conceal credentials.
+  assertNoSecrets(JSON.stringify(profile));
   if (Number(profile?.schema_version) >= 9) validateRawProfileV9(profile);
   sanitizeProfile(profile);
   if (Number(profile?.schema_version) >= 9) validateProfileV9(profile);

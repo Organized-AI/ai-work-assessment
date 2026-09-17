@@ -1,6 +1,6 @@
 {
   "name": "ai-work-assessment",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "An agent-run, evidence-based matching profile built from local AI work, GitHub, and optional career context.",
   "license": "MIT",
   "type": "module",
@@ -27,13 +27,15 @@
     "CHANGELOG.md",
     "LICENSE",
     "README.md",
-    "RELEASING.md"
+    "RELEASING.md",
+    "DISTRIBUTION-PATCHES.json"
   ],
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "sync": "node scripts/sync-from-overflow.mjs",
-    "sync:check": "node scripts/sync-from-overflow.mjs --check",
-    "release:check": "npm run sync:check && npm test && node scripts/release-check.mjs"
+    "sync": "node scripts/sync-from-overflow.mjs && node scripts/distribution-patches.mjs",
+    "sync:check": "node scripts/distribution-patches.mjs --check",
+    "release:check": "npm run sync:check && npm test && node scripts/release-check.mjs",
+    "distribution:apply": "node scripts/distribution-patches.mjs"
   },
   "engines": {
     "node": ">=20"
